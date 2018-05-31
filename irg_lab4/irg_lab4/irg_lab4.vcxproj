@@ -70,7 +70,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\source\repos\lab4_irg\irg_lab4\irg_lab4\libs\freeglut\include;$(IncludePath)</IncludePath>
+    <IncludePath>D:\source\repos\lab4_irg\irg_lab4\irg_lab4\libs\glm-0.9.9.0;D:\source\repos\lab4_irg\irg_lab4\irg_lab4\libs\freeglut\include;$(IncludePath)</IncludePath>
     <ExcludePath>$(SystemRoot)\SYSTEM32;$(ExcludePath)</ExcludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

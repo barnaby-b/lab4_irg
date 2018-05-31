@@ -4,6 +4,8 @@
 
 
 const std::tuple<int, int> Renderer::default_dimensions = std::tuple<int, int>{ 800, 600 };
+
+
 void Renderer::init(int & argc, char * argv[], const std::string & window_title) const
 {
 	glutInit(&argc, argv);
