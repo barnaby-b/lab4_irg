@@ -137,3 +137,29 @@ Mesh Mesh::from_stream(std::istream& is)
 
 	return Mesh(vtxs, faces);
 }
+
+Mesh::Mesh(Mesh&& other) noexcept: vtxs_(std::move(other.vtxs_)),
+                                   faces_(std::move(other.faces_)),
+                                   planes_(std::move(other.planes_))
+{
+}
+
+Mesh& Mesh::operator=(const Mesh& other)
+{
+	if (this == &other)
+		return *this;
+	vtxs_ = other.vtxs_;
+	faces_ = other.faces_;
+	planes_ = other.planes_;
+	return *this;
+}
+
+Mesh& Mesh::operator=(Mesh&& other) noexcept
+{
+	if (this == &other)
+		return *this;
+	vtxs_ = std::move(other.vtxs_);
+	faces_ = std::move(other.faces_);
+	planes_ = std::move(other.planes_);
+	return *this;
+}

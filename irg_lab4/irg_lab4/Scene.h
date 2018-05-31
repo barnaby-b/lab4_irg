@@ -9,18 +9,20 @@ class Scene
 	glm::vec3 center_;
 	glm::vec3 up_;
 	float z_near_;
-	float z_far;
+	float z_far_;
 	
 public:
 
-	Scene(Mesh object, const glm::vec3 eye, const glm::vec3 center, const glm::vec3 up, float z_near = 0.0f, float z_far = 100.0f)
-		: object_(std::move(object)),
-		  eye_(eye),
-		  center_(center),
-		  up_(up),
-		  z_near_(z_near),
-		  z_far(z_far)
-	{
-	}
+	Scene(Mesh object, 
+		glm::vec3 eye, glm::vec3 center, glm::vec3 up, 
+		float z_near = 0.0f, float z_far = 100.0f);
+
+
+	const Mesh& object() const;
+	const glm::vec3& eye() const;
+	const glm::vec3& center() const;
+	const glm::vec3& up() const;
+	float z_near() const;
+	float z_far() const;
 };
 
