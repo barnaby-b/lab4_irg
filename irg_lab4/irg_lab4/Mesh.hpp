@@ -10,7 +10,7 @@ class Mesh
 	std::vector<std::array<int, 3>> faces_;
 	std::vector<glm::vec4> planes_;
 
-	//void compute_planes();
+	void compute_planes();
 	
 
 public:
@@ -21,8 +21,6 @@ public:
 
 	std::string as_obj();
 	static Mesh from_stream(std::istream& is);
-
-
 
 	//Operators
 	Mesh(const Mesh& other) = default;

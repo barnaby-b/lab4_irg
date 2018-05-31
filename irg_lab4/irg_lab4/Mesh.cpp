@@ -1,6 +1,6 @@
 #include "Mesh.hpp"
 
-/*
+
 void Mesh::compute_planes()
 {
 	planes_.clear();
@@ -14,7 +14,7 @@ void Mesh::compute_planes()
 
 		planes_.emplace_back(normal[0], normal[1], normal[2], plane_coefficient_d);
 	}
-}*/
+}
 
 Mesh::Mesh(std::vector<glm::vec3> vtxs, std::vector<std::array<int, 3>> faces) :
 	vtxs_(std::move(vtxs)),
@@ -137,4 +137,3 @@ Mesh Mesh::from_stream(std::istream& is)
 
 	return Mesh(vtxs, faces);
 }
-
