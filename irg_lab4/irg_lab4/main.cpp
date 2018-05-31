@@ -2,6 +2,8 @@
 
 #include<GL/glut.h>
 
+#include "GlobalRenderer.hpp"
+
 void reshape(int width, int height);
 void display();
 
@@ -38,6 +40,7 @@ void reshape(const int width, const int height)
 int main(int argc, char *argv[])
 {
 	using namespace std;
+	auto a = GlobalRenderer::instance();
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE);
 	glutInitWindowSize(200, 200);
