@@ -45,3 +45,13 @@ void Renderer::reshape(const int width, const int height)
 	glOrtho(0, width - 1, height - 1, 0, 0, 1);
 	glMatrixMode(GL_MODELVIEW);
 }
+
+const Scene& Renderer::scene() const
+{
+	return scene_;
+}
+
+void Renderer::set_scene(const Scene& scene)
+{
+	scene_ = scene;
+}

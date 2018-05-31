@@ -8,8 +8,13 @@ Scene::Scene(Mesh object,
 	center_(center),
 	up_(up),
 	z_near_(z_near),
-	z_far(z_far)
+	z_far_(z_far)
 {
+}
+
+Scene Scene::empty_scene()
+{
+	return Scene{ {{}, {}}, {0, 0, 0}, {0,0,0}, {0,0,0} };
 }
 
 const Mesh& Scene::object() const

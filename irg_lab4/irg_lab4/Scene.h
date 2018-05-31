@@ -17,6 +17,7 @@ public:
 		glm::vec3 eye, glm::vec3 center, glm::vec3 up, 
 		float z_near = 0.0f, float z_far = 100.0f);
 
+	static Scene empty_scene();
 
 	const Mesh& object() const;
 	const glm::vec3& eye() const;
