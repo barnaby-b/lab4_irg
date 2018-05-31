@@ -5,9 +5,10 @@
 class GlobalRenderer
 {
 	GlobalRenderer() = default;
-	Renderer renderer_;
+	
 
 public:
 	static GlobalRenderer & instance();
+	Renderer renderer;
 };
 

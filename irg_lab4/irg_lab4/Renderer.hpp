@@ -1,10 +1,16 @@
 #pragma once
 
-#include <iostream>
+#include <tuple>
+#include <string>
 
 class Renderer
 {
+	static const std::tuple<int, int> default_dimensions;
+
 public:
-	Renderer();
+	Renderer() = default;
+	void init(int& argc, char* argv[], const std::string& window_title) const;
+	static void display();
+	static void reshape(const int width, const int height);
 };
 
