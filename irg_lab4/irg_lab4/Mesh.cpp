@@ -1,11 +1,6 @@
 #include "Mesh.hpp"
 
-#include<array>
-#include<sstream>
-
-#include<glm/vec3.hpp>
-
-
+/*
 void Mesh::compute_planes()
 {
 	planes_.clear();
@@ -19,7 +14,7 @@ void Mesh::compute_planes()
 
 		planes_.emplace_back(normal[0], normal[1], normal[2], plane_coefficient_d);
 	}
-}
+}*/
 
 Mesh::Mesh(std::vector<glm::vec3> vtxs, std::vector<std::array<int, 3>> faces) :
 	vtxs_(std::move(vtxs)),
@@ -27,11 +22,7 @@ Mesh::Mesh(std::vector<glm::vec3> vtxs, std::vector<std::array<int, 3>> faces) :
 {
 }
 
-Mesh::~Mesh()
-{
-}
-
-void Mesh::normalize()
+Mesh Mesh::normalize()
 {
 	glm::vec3 mins(vtxs_[0][0], vtxs_[0][1], vtxs_[0][2]);
 	glm::vec3 maxs(vtxs_[0][0], vtxs_[0][1], vtxs_[0][2]);
@@ -57,7 +48,7 @@ void Mesh::normalize()
 	auto center((maxs - mins) / 2.0f);
 
 	//find max range over coordinates
-	double max_range = maxs[0] - mins[0];
+	auto max_range = maxs[0] - mins[0];
 	for (auto i = 1; i < 3; ++i)
 	{
 		if ((maxs[i] - mins[i]) > max_range)
@@ -74,6 +65,8 @@ void Mesh::normalize()
 		}
 	}
 
+
+	return *this;
 }
 
 std::string Mesh::as_obj()
@@ -106,7 +99,6 @@ Mesh Mesh::from_stream(std::istream& is)
 	{
 		stringstream sstream(line);
 		auto entity_type = '\0';
-		auto defined_face = false;
 
 		sstream >> entity_type;
 
@@ -115,7 +107,7 @@ Mesh Mesh::from_stream(std::istream& is)
 
 		case 'v': {
 
-			double x = 0, y = 0, z = 0;
+			float x = 0, y = 0, z = 0;
 			if (!(sstream >> x >> y >> z))
 			{
 				throw domain_error("vertex format invalid");
@@ -125,7 +117,7 @@ Mesh Mesh::from_stream(std::istream& is)
 			break;
 		}
 		case 'f': {
-			defined_face = true;
+
 			int v1_ind = 0, v2_ind = 0, v3_ind;
 
 			if (!(sstream >> v1_ind >> v2_ind >> v3_ind))
@@ -133,7 +125,7 @@ Mesh Mesh::from_stream(std::istream& is)
 				throw domain_error("face format invalid");
 			}
 
-			faces.emplace_back(v1_ind - 1, v2_ind - 1, v3_ind - 1);
+			faces.push_back({ v1_ind - 1, v2_ind - 1, v3_ind - 1 });
 
 			break;
 		}

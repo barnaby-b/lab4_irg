@@ -1,7 +1,8 @@
 #pragma once
-#include <vector>
-#include <glm/vec3.hpp>
-#include <istream>
+#include<vector>
+#include<array>
+#include<sstream>
+#include<glm/glm.hpp>
 
 class Mesh
 {
@@ -9,14 +10,14 @@ class Mesh
 	std::vector<std::array<int, 3>> faces_;
 	std::vector<glm::vec4> planes_;
 
-	void compute_planes();
+	//void compute_planes();
 	
 
 public:
 	Mesh(std::vector<glm::vec3> vtxs, std::vector<std::array<int, 3>> faces);
-	~Mesh();
+	~Mesh() = default;
 
-	void normalize();
+	Mesh normalize();
 
 	std::string as_obj();
 	static Mesh from_stream(std::istream& is);
