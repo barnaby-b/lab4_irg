@@ -163,3 +163,18 @@ Mesh& Mesh::operator=(Mesh&& other) noexcept
 	planes_ = std::move(other.planes_);
 	return *this;
 }
+
+const std::vector<glm::vec3>& Mesh::vtxs() const
+{
+	return vtxs_;
+}
+
+const std::vector<std::array<int, 3>>& Mesh::faces() const
+{
+	return faces_;
+}
+
+const std::vector<glm::vec4>& Mesh::planes() const
+{
+	return planes_;
+}

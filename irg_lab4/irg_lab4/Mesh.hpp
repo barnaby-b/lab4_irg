@@ -27,6 +27,11 @@ public:
 	Mesh(Mesh&& other) noexcept;
 	Mesh& operator=(const Mesh& other);
 	Mesh& operator=(Mesh&& other) noexcept;
+
+	//Getters
+	const std::vector<glm::vec3>& vtxs() const;
+	const std::vector<std::array<int, 3>>& faces() const;
+	const std::vector<glm::vec4>& planes() const;
 };
 
 
