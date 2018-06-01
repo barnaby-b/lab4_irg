@@ -17,7 +17,7 @@ public:
 
 	Scene(Mesh object, 
 		glm::vec3 eye, glm::vec3 center, glm::vec3 up, 
-		float z_near = 0.0f, float z_far = 100.0f, float near_w = 1.0f, float near_h = 1.0f);
+		float z_near = 1.0f, float z_far = 100.0f, float near_w = 1.0f, float near_h = 1.0f);
 	Scene();
 
 	static Scene empty_scene();

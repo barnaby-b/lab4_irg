@@ -1,7 +1,6 @@
 #include "Renderer.hpp"
 #include <string>
 #include <GL/glut.h>
-#include <iostream>
 
 
 const std::tuple<int, int> Renderer::default_dimensions = std::tuple<int, int>{ 800, 600 };
@@ -9,7 +8,7 @@ Scene Renderer::scene_{};
 
 void Renderer::render()
 {
-
+	glColor3f(1, 0, 0);
 	for(auto face : scene_.object().faces())
 	{
 		glBegin(GL_LINE_LOOP);
@@ -35,7 +34,7 @@ void Renderer::init(int & argc, char * argv[], const std::string & window_title)
 
 void Renderer::display()
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
 
@@ -55,11 +54,10 @@ void Renderer::reshape(const int width, const int height)
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glFrustum(-0.5, 0.5, -0.5, 0.5, 1, 100);
-	//glFrustum(-1, 1, -1, 1, 1.5, 20);
-	/*glFrustum(- scene_.near_w() / 2, scene_.near_w() / 2,
+	
+	glFrustum(- scene_.near_w() / 2, scene_.near_w() / 2,
 		- scene_.near_h() / 2, scene_.near_h() / 2,
-		scene_.z_near(), scene_.z_far());*/
+		scene_.z_near(), scene_.z_far());
 
 	glMatrixMode(GL_MODELVIEW);
 	
