@@ -6,7 +6,6 @@
 
 const std::tuple<int, int> Renderer::default_dimensions = std::tuple<int, int>{ 800, 600 };
 Scene Renderer::scene_{};
-int Renderer::iter_ = 1;
 
 void Renderer::render()
 {
@@ -36,15 +35,13 @@ void Renderer::init(int & argc, char * argv[], const std::string & window_title)
 
 void Renderer::display()
 {
-	glClearColor(0.0f, iter_  % 2 == 0 ? 1.0f : 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
-	//gluLookAt(0, 0, 5, 0, 0, 0, 0, 1, 0);
-	//gluLookAt(scene_.eye()[0], scene_.eye()[1], scene_.eye()[2],
-	//	scene_.center()[0], scene_.center()[1], scene_.center()[2],
-	//	scene_.up()[0], scene_.up()[1], scene_.up()[2]);
 
-	gluLookAt(3, 4, 1, 0, 0, 0, 0, 1, 0);
+	gluLookAt(scene_.eye()[0], scene_.eye()[1], scene_.eye()[2],
+		scene_.center()[0], scene_.center()[1], scene_.center()[2],
+		scene_.up()[0], scene_.up()[1], scene_.up()[2]);
 
 	render();
 
@@ -60,9 +57,9 @@ void Renderer::reshape(const int width, const int height)
 	glLoadIdentity();
 	glFrustum(-0.5, 0.5, -0.5, 0.5, 1, 100);
 	//glFrustum(-1, 1, -1, 1, 1.5, 20);
-	//glFrustum(- scene_.near_w() / 2, scene_.near_w() / 2,
-	//	- scene_.near_h() / 2, scene_.near_h() / 2,
-	//	scene_.z_near(), scene_.z_far());
+	/*glFrustum(- scene_.near_w() / 2, scene_.near_w() / 2,
+		- scene_.near_h() / 2, scene_.near_h() / 2,
+		scene_.z_near(), scene_.z_far());*/
 
 	glMatrixMode(GL_MODELVIEW);
 	

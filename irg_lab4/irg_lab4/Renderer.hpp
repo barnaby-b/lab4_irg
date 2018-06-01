@@ -8,7 +8,6 @@ class Renderer
 {
 	static const std::tuple<int, int> default_dimensions;
 	static Scene scene_;
-	static int iter_;
 
 public:
 	Renderer() = default;
