@@ -7,7 +7,7 @@ void Mesh::compute_planes()
 
 	for(auto face : faces_)
 	{
-		auto face_coords = std::array<glm::vec3, 3>{ vtxs_[face[0]], vtxs_[face[1]], vtxs_[face[2]] };
+		auto face_coords = get_vertices_for_face(face);
 
 		auto normal = (face_coords[1] - face_coords[0]) * (face_coords[2] - face_coords[0]);
 		auto plane_coefficient_d = -face_coords[0][0] * normal[0] - face_coords[0][1] * normal[1] - face_coords[0][2] * normal[2];
@@ -136,6 +136,12 @@ Mesh Mesh::from_stream(std::istream& is)
 	}
 
 	return Mesh(vtxs, faces);
+}
+
+std::array<glm::vec3, 3> Mesh::get_vertices_for_face(std::array<int, 3> face) const
+{
+
+	return { vtxs_[face[0]], vtxs_[face[1]], vtxs_[face[2]] };
 }
 
 Mesh::Mesh(Mesh&& other) noexcept: vtxs_(std::move(other.vtxs_)),

@@ -10,12 +10,15 @@ class Scene
 	glm::vec3 up_;
 	float z_near_;
 	float z_far_;
+	float near_w_;
+	float near_h_;
 	
 public:
 
 	Scene(Mesh object, 
 		glm::vec3 eye, glm::vec3 center, glm::vec3 up, 
-		float z_near = 0.0f, float z_far = 100.0f);
+		float z_near = 0.0f, float z_far = 100.0f, float near_w = 1.0f, float near_h = 1.0f);
+	Scene();
 
 	static Scene empty_scene();
 
@@ -25,5 +28,7 @@ public:
 	const glm::vec3& up() const;
 	float z_near() const;
 	float z_far() const;
+	float near_w() const;
+	float near_h() const;
 };
 

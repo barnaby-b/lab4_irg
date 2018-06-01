@@ -21,6 +21,7 @@ public:
 
 	std::string as_obj();
 	static Mesh from_stream(std::istream& is);
+	std::array<glm::vec3, 3> get_vertices_for_face(std::array<int, 3> face) const;
 
 	//Operators
 	Mesh(const Mesh& other) = default;

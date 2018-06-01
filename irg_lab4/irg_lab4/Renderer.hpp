@@ -7,18 +7,20 @@
 class Renderer
 {
 	static const std::tuple<int, int> default_dimensions;
-	Scene scene_{Scene::empty_scene()};
+	static Scene scene_;
+	static int iter_;
 
 public:
 	Renderer() = default;
 
 	void init(int& argc, char* argv[], const std::string& window_title) const;
 	static void display();
-	static void reshape(const int width, const int height);
+	static void reshape(int width, int height);
 
 
-	const Scene& scene() const;
+	static const Scene& get_scene();
 
-	void set_scene(const Scene& scene);
+	static void set_scene(const Scene& s);
+	static void render();
 };
 
