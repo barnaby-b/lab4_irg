@@ -1,4 +1,6 @@
 #include "Mesh.hpp"
+#include <map>
+#include <set>
 
 
 void Mesh::compute_planes()
@@ -18,14 +20,47 @@ void Mesh::compute_planes()
 
 void Mesh::compute_vtx_normals()
 {
+	using namespace std;
+	using namespace glm;
+
+	//vertex index to vector of faces that use the vertex
+	map<int, set<int>> vertex_to_faces;
+
+	for(auto face_ind = 0u; face_ind < faces_.size(); ++face_ind)
+	{
+		for(auto vtx_ind = 0; vtx_ind < 3; ++vtx_ind)
+		{
+			vertex_to_faces[faces_[face_ind][vtx_ind]].insert(face_ind);
+		}
+	}
+
+	for(auto i = 0u; i < vtxs_.size(); ++i)
+	{
+		vector<vec3> adjacent_normals;
+		for(auto face_index : vertex_to_faces[i])
+		{
+			adjacent_normals.push_back(glm::normalize(vec3(planes_[face_index][0], planes_[face_index][0], planes_[face_index][0])));
+		}
+
+		vec3 vtx_normal{0, 0, 0};
+		for(const auto normal : adjacent_normals)
+		{
+			vtx_normal += normal;
+		}
+
+		vtx_normal = vtx_normal / static_cast<float>(adjacent_normals.size());
+
+		vtx_normals_.push_back(glm::normalize(vtx_normal));
+	}
 
 }
 
-Mesh::Mesh(std::vector<glm::vec3> vtxs, std::vector<std::array<int, 3>> faces) :
+Mesh::Mesh(std::vector<glm::vec3> vtxs, std::vector<face> faces) :
 	vtxs_(std::move(vtxs)),
 	faces_(std::move(faces))
 {
 	compute_planes();
+	compute_vtx_normals();
 }
 
 Mesh Mesh::normalize()
@@ -99,7 +134,7 @@ Mesh Mesh::from_stream(std::istream& is)
 	using namespace std;
 
 	vector<glm::vec3> vtxs;
-	vector<std::array<int, 3>> faces;
+	vector<face> faces;
 
 	for (string line; getline(is, line);)
 	{
@@ -144,7 +179,7 @@ Mesh Mesh::from_stream(std::istream& is)
 	return Mesh(vtxs, faces);
 }
 
-std::array<glm::vec3, 3> Mesh::get_vertices_for_face(std::array<int, 3> face) const
+std::array<glm::vec3, 3> Mesh::get_vertices_for_face(face face) const
 {
 
 	return { vtxs_[face[0]], vtxs_[face[1]], vtxs_[face[2]] };
@@ -181,7 +216,7 @@ const std::vector<glm::vec3>& Mesh::vtxs() const
 	return vtxs_;
 }
 
-const std::vector<std::array<int, 3>>& Mesh::faces() const
+const std::vector<Mesh::face>& Mesh::faces() const
 {
 	return faces_;
 }

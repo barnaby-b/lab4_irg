@@ -1,6 +1,7 @@
 #include "Renderer.hpp"
 #include <string>
 #include <GL/glut.h>
+#include <random>
 
 
 const std::tuple<int, int> Renderer::default_dimensions = std::tuple<int, int>{ 800, 600 };
@@ -8,10 +9,14 @@ Scene Renderer::scene_{};
 
 void Renderer::render()
 {
-	glColor3f(1, 0, 0);
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	const std::uniform_real_distribution<float> dis(0.0f, 1.0f);
+	
 	for(auto face : scene_.object().faces())
 	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glColor3f(dis(gen), dis(gen), dis(gen));
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glBegin(GL_POLYGON);
 		auto vtx_coords = scene_.object().get_vertices_for_face(face);
 		glVertex3f(vtx_coords[0][0], vtx_coords[0][1], vtx_coords[0][2]);
@@ -33,13 +38,14 @@ void Renderer::init(int & argc, char * argv[], const std::string & window_title)
 	glutKeyboardUpFunc(key_up);
 
 	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
 }
 
 void Renderer::display()
 {
 	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
 	gluLookAt(scene_.eye()[0], scene_.eye()[1], scene_.eye()[2],
@@ -73,12 +79,12 @@ void Renderer::key_up(const unsigned char key, int, int)
 	{
 	case 'r':
 		{
-		scene_.rotate_eye(1);
+		scene_.rotate_eye(10);
 		break;
 		}
 	case 'l':
 		{
-		scene_.rotate_eye(-1);
+		scene_.rotate_eye(-10);
 		break;
 		}
 	default:
