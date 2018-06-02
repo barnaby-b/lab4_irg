@@ -16,10 +16,16 @@ void Mesh::compute_planes()
 	}
 }
 
+void Mesh::compute_vtx_normals()
+{
+
+}
+
 Mesh::Mesh(std::vector<glm::vec3> vtxs, std::vector<std::array<int, 3>> faces) :
 	vtxs_(std::move(vtxs)),
 	faces_(std::move(faces))
 {
+	compute_planes();
 }
 
 Mesh Mesh::normalize()

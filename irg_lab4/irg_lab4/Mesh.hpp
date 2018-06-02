@@ -9,8 +9,10 @@ class Mesh
 	std::vector<glm::vec3> vtxs_;
 	std::vector<std::array<int, 3>> faces_;
 	std::vector<glm::vec4> planes_;
+	std::vector<glm::vec3> vtx_normals_;
 
 	void compute_planes();
+	void compute_vtx_normals();
 	
 
 public:

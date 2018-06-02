@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include <GL/glut.h>
 
 Scene::Scene(Mesh object, 
 	const glm::vec3 eye, const glm::vec3 center, const glm::vec3 up, 
@@ -31,6 +32,18 @@ Scene Scene::empty_scene()
 	return Scene{ {{}, {}}, {0, 0, 0}, {0,0,0}, {0,0,0} };
 }
 
+void Scene::rotate_eye(const double deg)
+{
+	static auto angle = 18.4349;
+	static auto radius = 3.162277;
+	static const auto deg_to_rad = 0.017453;
+
+	angle += deg;
+	eye_ = { radius*cos(angle*deg_to_rad), 4, radius*sin(angle*deg_to_rad) };
+
+	glutPostRedisplay();
+}
+
 const Mesh& Scene::object() const
 {
 	return object_;
@@ -39,6 +52,11 @@ const Mesh& Scene::object() const
 const glm::vec3& Scene::eye() const
 {
 	return eye_;
+}
+
+void Scene::set_eye(const glm::vec3& eye)
+{
+	eye_ = eye;
 }
 
 const glm::vec3& Scene::center() const

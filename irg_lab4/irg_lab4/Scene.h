@@ -12,6 +12,9 @@ class Scene
 	float z_far_;
 	float near_w_;
 	float near_h_;
+
+
+	void set_eye(const glm::vec3& eye);
 	
 public:
 
@@ -21,6 +24,7 @@ public:
 	Scene();
 
 	static Scene empty_scene();
+	void rotate_eye(double deg);
 
 	const Mesh& object() const;
 	const glm::vec3& eye() const;

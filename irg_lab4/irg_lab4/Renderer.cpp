@@ -21,7 +21,6 @@ void Renderer::render()
 	}
 }
 
-
 void Renderer::init(int & argc, char * argv[], const std::string & window_title) const
 {
 	glutInit(&argc, argv);
@@ -31,6 +30,7 @@ void Renderer::init(int & argc, char * argv[], const std::string & window_title)
 	glutCreateWindow(window_title.c_str());
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
+	glutKeyboardUpFunc(key_up);
 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
@@ -65,6 +65,27 @@ void Renderer::reshape(const int width, const int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	
+}
+
+void Renderer::key_up(const unsigned char key, int, int)
+{
+	switch(key)
+	{
+	case 'r':
+		{
+		scene_.rotate_eye(1);
+		break;
+		}
+	case 'l':
+		{
+		scene_.rotate_eye(-1);
+		break;
+		}
+	default:
+		{
+			
+		}
+	}
 }
 
 const Scene& Renderer::get_scene()
