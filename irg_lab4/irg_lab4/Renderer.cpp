@@ -29,7 +29,7 @@ void Renderer::render()
 void Renderer::init(int & argc, char * argv[], const std::string & window_title) const
 {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowSize(std::get<0>(default_dimensions), std::get<1>(default_dimensions));
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow(window_title.c_str());
