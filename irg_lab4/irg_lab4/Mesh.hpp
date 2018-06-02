@@ -38,6 +38,8 @@ public:
 
 	const std::vector<face>& faces() const;
 
+	const std::vector<glm::vec3>& vtx_normals() const;
+
 	const std::vector<glm::vec4>& planes() const;
 };
 

@@ -191,7 +191,8 @@ std::array<glm::vec3, 3> Mesh::get_vertices_for_face(face face) const
 
 Mesh::Mesh(Mesh&& other) noexcept: vtxs_(std::move(other.vtxs_)),
                                    faces_(std::move(other.faces_)),
-                                   planes_(std::move(other.planes_))
+                                   planes_(std::move(other.planes_)),
+								   vtx_normals_(std::move(other.vtx_normals_))
 {
 }
 
@@ -202,6 +203,7 @@ Mesh& Mesh::operator=(const Mesh& other)
 	vtxs_ = other.vtxs_;
 	faces_ = other.faces_;
 	planes_ = other.planes_;
+	vtx_normals_ = other.vtx_normals_;
 	return *this;
 }
 
@@ -212,6 +214,7 @@ Mesh& Mesh::operator=(Mesh&& other) noexcept
 	vtxs_ = std::move(other.vtxs_);
 	faces_ = std::move(other.faces_);
 	planes_ = std::move(other.planes_);
+	vtx_normals_ = std::move(other.vtx_normals_);
 	return *this;
 }
 
@@ -223,6 +226,11 @@ const std::vector<glm::vec3>& Mesh::vtxs() const
 const std::vector<Mesh::face>& Mesh::faces() const
 {
 	return faces_;
+}
+
+const std::vector<glm::vec3>& Mesh::vtx_normals() const
+{
+	return vtx_normals_;
 }
 
 const std::vector<glm::vec4>& Mesh::planes() const

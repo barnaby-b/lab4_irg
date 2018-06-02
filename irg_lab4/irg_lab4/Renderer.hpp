@@ -13,6 +13,7 @@ public:
 	Renderer() = default;
 
 	void init(int& argc, char* argv[], const std::string& window_title) const;
+	static void initialize_lighting();
 	static void display();
 	static void reshape(int width, int height);
 	static void key_up(unsigned char key, int x, int y);
