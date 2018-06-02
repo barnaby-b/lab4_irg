@@ -11,7 +11,8 @@ void Renderer::render()
 	glColor3f(1, 0, 0);
 	for(auto face : scene_.object().faces())
 	{
-		glBegin(GL_LINE_LOOP);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glBegin(GL_POLYGON);
 		auto vtx_coords = scene_.object().get_vertices_for_face(face);
 		glVertex3f(vtx_coords[0][0], vtx_coords[0][1], vtx_coords[0][2]);
 		glVertex3f(vtx_coords[1][0], vtx_coords[1][1], vtx_coords[1][2]);
@@ -30,6 +31,9 @@ void Renderer::init(int & argc, char * argv[], const std::string & window_title)
 	glutCreateWindow(window_title.c_str());
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 }
 
 void Renderer::display()
