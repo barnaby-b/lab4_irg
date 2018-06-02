@@ -11,7 +11,9 @@ void Mesh::compute_planes()
 	{
 		auto face_coords = get_vertices_for_face(face);
 
-		auto normal = (face_coords[1] - face_coords[0]) * (face_coords[2] - face_coords[0]);
+		const auto normal1 = (face_coords[1] - face_coords[0]);
+		const auto normal2 = (face_coords[2] - face_coords[0]);
+		auto normal = glm::cross(normal1, normal2);
 		auto plane_coefficient_d = -face_coords[0][0] * normal[0] - face_coords[0][1] * normal[1] - face_coords[0][2] * normal[2];
 
 		planes_.emplace_back(normal[0], normal[1], normal[2], plane_coefficient_d);
@@ -39,13 +41,13 @@ void Mesh::compute_vtx_normals()
 		vector<vec3> adjacent_normals;
 		for(auto face_index : vertex_to_faces[i])
 		{
-			adjacent_normals.push_back(glm::normalize(vec3(planes_[face_index][0], planes_[face_index][0], planes_[face_index][0])));
+			adjacent_normals.push_back(glm::normalize(vec3(planes_[face_index][0], planes_[face_index][1], planes_[face_index][2])));
 		}
 
 		vec3 vtx_normal{0, 0, 0};
 		for(const auto normal : adjacent_normals)
 		{
-			vtx_normal += normal;
+			vtx_normal += glm::normalize(normal);
 		}
 
 		vtx_normal = vtx_normal / static_cast<float>(adjacent_normals.size());
@@ -106,6 +108,8 @@ Mesh Mesh::normalize()
 		}
 	}
 
+	compute_planes();
+	compute_vtx_normals();
 
 	return *this;
 }
