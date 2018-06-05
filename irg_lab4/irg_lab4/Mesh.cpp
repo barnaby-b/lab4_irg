@@ -25,7 +25,7 @@ void Mesh::compute_vtx_normals()
 	using namespace std;
 	using namespace glm;
 
-	//vertex index to vector of faces that use the vertex
+	//vertex index to vector of face indices that use the vertex
 	map<int, set<int>> vertex_to_faces;
 
 	for(auto face_ind = 0u; face_ind < faces_.size(); ++face_ind)
@@ -108,6 +108,8 @@ Mesh Mesh::normalize()
 		}
 	}
 
+
+	//recompute plane equations and normals
 	compute_planes();
 	compute_vtx_normals();
 
