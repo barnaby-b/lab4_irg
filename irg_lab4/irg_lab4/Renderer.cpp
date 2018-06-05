@@ -5,6 +5,8 @@
 
 const std::tuple<int, int> Renderer::default_dimensions = std::tuple<int, int>{ 800, 600 };
 Scene Renderer::scene_{};
+Light Renderer::light_{ { -4, 5, 3 }, { 0.2f, 0.2f, 0.2f },{ 0.8f, 0.0f, 0 },{ 0.8f, 0.0f, 0 } };
+Material Renderer::material_{{1.0f,1.0f,1},{1, 1.0f, 1},{0.01f, 0.01f, 0.01f}};
 
 void Renderer::render()
 {
@@ -17,21 +19,41 @@ void Renderer::render()
 	glMaterialf(GL_FRONT, GL_SHININESS, 96);
 
 	auto vtx_normals = scene_.object().vtx_normals();
+	
+	auto i = 0u;
 	for(auto face : scene_.object().faces())
 	{
 		
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glBegin(GL_POLYGON);
 		auto vtx_coords = scene_.object().get_vertices_for_face(face);
-		glNormal3f(vtx_normals[face[0]][0], vtx_normals[face[0]][1], vtx_normals[face[0]][2]);
+		const auto center = (vtx_coords[0] + vtx_coords[1] + vtx_coords[2]) * 1.0f/3.0f;
+		const auto light_vector = light_.pos() - center;
+		const auto eye_vector = scene_.eye() - center;
+		const auto normal = normalize(glm::vec3{ scene_.object().planes()[i][0],scene_.object().planes()[i][1], scene_.object().planes()[i][2] });
+		const auto ref = reflect(light_vector, normal);
+
+		std::array<float, 3> specular_emission{0, 0, 0};
+		std::array<float, 3> diffuse_emission{ 0, 0, 0 };
+		std::array<float, 3> ambient_emission{ 0, 0, 0 };
+
+		for (auto ii = 0u; ii < 3; ++ii)
+		{
+			specular_emission[ii] = light_.specular_intensities()[ii] * material_.specular_emission()[ii] * dot(normalize(ref), normalize(eye_vector));
+			diffuse_emission[ii] = std::max(light_.diffuse_intesities()[ii] * material_.diffuse_emission()[ii] * dot(normalize(light_vector), normalize(normal)), 0.0f);
+			ambient_emission[ii]= light_.ambient_intensities()[ii] * material_.ambient_emission()[ii];
+		}
+
+		glColor3f(specular_emission[0] + diffuse_emission[0] + ambient_emission[0],
+			specular_emission[1] + diffuse_emission[1] + ambient_emission[1],
+			specular_emission[2] + diffuse_emission[2] + ambient_emission[2]);
+
 		glVertex3f(vtx_coords[0][0], vtx_coords[0][1], vtx_coords[0][2]);
-
-		glNormal3f(vtx_normals[face[1]][0], vtx_normals[face[1]][1], vtx_normals[face[1]][2]);
 		glVertex3f(vtx_coords[1][0], vtx_coords[1][1], vtx_coords[1][2]);
-
-		glNormal3f(vtx_normals[face[2]][0], vtx_normals[face[2]][1], vtx_normals[face[2]][2]);
 		glVertex3f(vtx_coords[2][0], vtx_coords[2][1], vtx_coords[2][2]);
 		glEnd();
+
+		++i;
 	}
 }
 
@@ -53,18 +75,10 @@ void Renderer::init(int & argc, char * argv[], const std::string & window_title)
 
 void Renderer::initialize_lighting()
 {
-	glEnable(GL_LIGHTING);
-	float ambient[] = { 0, 0, 0, 1 };
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
 	float light_pos[]{ -4, 5, 3, 1 };
 	float light_amb[]{ 0.2f, 0.2f, 0.2f, 1 };
 	float light_dif[]{ 0.8f, 0.0f, 0, 1};
-	float light_spc[]{ 0, 0, 0, 1 };
-	glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, light_amb);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_dif);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, light_spc);
-	glEnable(GL_LIGHT0);
+	float light_spc[]{ 0.8f, 0.0f, 0, 1};
 }
 
 void Renderer::display()

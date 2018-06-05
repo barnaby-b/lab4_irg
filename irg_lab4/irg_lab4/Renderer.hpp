@@ -3,11 +3,15 @@
 #include <tuple>
 #include <string>
 #include "Scene.h"
+#include "Light.h"
+#include "Material.h"
 
 class Renderer
 {
 	static const std::tuple<int, int> default_dimensions;
 	static Scene scene_;
+	static Light light_;
+	static Material material_;
 
 public:
 	Renderer() = default;

@@ -18,6 +18,6 @@ public:
 	const std::array<float, 3>& diffuse_emission() const;
 	const std::array<float, 3>& specular_emission() const;
 
-	~Material() = default;
+	
 };
 
