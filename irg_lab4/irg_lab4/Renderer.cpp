@@ -57,8 +57,8 @@ void Renderer::set_gl_color_frac(int n)
 
 	const auto limit = 128;
 	const auto r = (n - 1) * 255.0f / limit;
-	const auto g = ((n - 1) % (limit / 4)) * 255.0f / (limit / 4);
-	const auto b = ((n - 1) % (limit / 8)) * 255.0f / (limit / 8);
+	const auto g = ((n - 1) % (limit / 4)) * 255.0f / (limit / 4.0f);
+	const auto b = ((n - 1) % (limit / 8)) * 255.0f / (limit / 8.0f);
 	glColor3f(r / 255.0f, g / 255.0f, b / 255.0f);
 }
 
