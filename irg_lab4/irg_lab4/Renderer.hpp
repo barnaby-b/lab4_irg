@@ -12,12 +12,13 @@ class Renderer
 	static Scene scene_;
 	static Light light_;
 	static Material material_;
+	static glm::mat4 frustum_;
+	static glm::mat4 look_at_;
 
 public:
 	Renderer() = default;
 
 	void init(int& argc, char* argv[], const std::string& window_title) const;
-	static void initialize_lighting();
 	static void display();
 	static void reshape(int width, int height);
 	static void key_up(unsigned char key, int x, int y);
@@ -26,6 +27,7 @@ public:
 	static const Scene& get_scene();
 
 	static void set_scene(const Scene& s);
+	static std::array<float, 3> get_light_intensity(glm::vec3 point, glm::vec3 normal);
 	static void render();
 };
 
