@@ -1,7 +1,6 @@
 #include "GlobalRenderer.hpp"
 #include "Mesh.hpp"
 #include <iostream>
-#include "Scene.h"
 #include <GL/glut.h>
 
 int main(int argc, char *argv[])
