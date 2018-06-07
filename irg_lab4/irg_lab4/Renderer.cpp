@@ -1,52 +1,54 @@
 ﻿#include "Renderer.hpp"
 #include <string>
 #include <GL/glut.h>
+#include <iostream>
+#include <map>
+#include <random>
 
 const std::tuple<int, int> Renderer::default_dimensions = std::tuple<int, int>{ 800, 600 };
 std::tuple<int, int> Renderer::dimensions_ = default_dimensions;
+IfsDescriptor Renderer::ifs_{ 0, 0, {}, {{}} };
 
 void Renderer::render()
 {
+
 	const auto limit = 30;
 	glPointSize(1);
 	glColor3f(0.0f, 0.7f, 0.3f);
-	glBegin(GL_POINTS);
+	
 
-	for(auto brojac = 0; brojac < 200000; ++brojac)
+	auto weights = ifs_.weights();
+	const std::discrete_distribution<> d(weights.begin(), weights.end());
+	std::random_device rd;
+	std::mt19937 gen(rd());
+
+	auto table = ifs_.table();
+
+	for(auto brojac = 0; brojac < ifs_.points_number(); ++brojac)
 	{
 		auto x0 = 0.0;
 		auto y0 = 0.0;
 
-		for(auto iter = 0; iter < limit; ++iter)
+		for(auto iter = 0; iter < ifs_.limit(); ++iter)
 		{
-			double x, y;
+			const auto chosen_transform = table[d(gen)];
 
-			auto p = rand() % 100;
-			if(p < 1)
-			{
-				x = 0;
-				y = 0.16*y0;
-			} else if(p < 8)
-			{
-				x = 0.2*x0 - 0.26*y0 + 0;
-				y = 0.23*x0 + 0.22*y0 + 1.6;
-			} else if(p < 15)
-			{
-				x = -0.15*x0 + 0.28*y0 + 0;
-				y = 0.26*x0 + 0.24*y0 + 0.44;
-
-			} else
-			{
-				x = 0.85*x0 + 0.04*y0 + 0;
-				y = -0.04*x0 + 0.85*y0 + 1.6;
-			}
-
-			x0 = x;
-			y0 = y;
+			x0 = chosen_transform[0] * x0 + chosen_transform[1] * y0 + chosen_transform[4];;
+			y0 = chosen_transform[2] * x0 + chosen_transform[3] * y0 + chosen_transform[5];;
 		}
 
-		glVertex2i(round(x0 * 80 + 300), round(y0 * 60));
+
+		glBegin(GL_POINTS);
+		glVertex2i(round(x0 * std::get<0>(ifs_.etas()) + std::get<1>(ifs_.etas())), round(y0 *  std::get<2>(ifs_.etas()) + std::get<3>(ifs_.etas())));
+		glEnd();
+		if (!(brojac % 1000)) std::cout << brojac << std::endl;
 	}
+}
+
+void Renderer::set_ifs(const IfsDescriptor ifs)
+{
+	ifs_ = ifs;
+
 }
 
 void Renderer::init(int & argc, char * argv[], const std::string & window_title) const
@@ -66,10 +68,9 @@ void Renderer::display()
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
 
-
+	//render scene
 	render();
 
-	
 	glFlush();
 	glutSwapBuffers();
 }

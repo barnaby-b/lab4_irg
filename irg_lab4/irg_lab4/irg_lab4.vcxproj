@@ -73,6 +73,9 @@
     <IncludePath>D:\source\repos\lab4_irg\irg_lab4\irg_lab4\libs\glm-0.9.9.0;D:\source\repos\lab4_irg\irg_lab4\irg_lab4\libs\freeglut\include;$(IncludePath)</IncludePath>
     <ExcludePath>$(SystemRoot)\SYSTEM32;$(ExcludePath)</ExcludePath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>D:\source\repos\lab4_irg\irg_lab4\irg_lab4\libs\glm-0.9.9.0;D:\source\repos\lab4_irg\irg_lab4\irg_lab4\libs\freeglut\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -91,7 +94,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\source\repos\lab4_irg\irg_lab4\irg_lab4\libs\freeglut\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>D:\source\repos\lab4_irg\irg_lab4\irg_lab4\libs\freeglut\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freeglut.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -122,8 +130,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="frac_util.cpp" />
     <ClCompile Include="GlobalRenderer.cpp" />
+    <ClCompile Include="IFSDescriptor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -131,7 +139,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GlobalRenderer.hpp" />
+    <ClInclude Include="IFSDescriptor.h" />
     <ClInclude Include="Mesh.hpp" />
+    <ClInclude Include="parser_helper.hpp" />
     <ClInclude Include="Renderer.hpp" />
     <ClInclude Include="Scene.h" />
   </ItemGroup>
