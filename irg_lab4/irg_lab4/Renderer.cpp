@@ -52,11 +52,23 @@ int divergence_test_cube(const complex c, const int limit)
 	return -1;
 }
 
+int divergence_test(const complex c, const int limit, const bool use_cube_fn)
+{
+	if (use_cube_fn)
+	{
+		return divergence_test_cube(c, limit);
+	}
+
+	return divergence_test_sq(c, limit);
+}
+
 const std::tuple<int, int> Renderer::default_dimensions = std::tuple<int, int>{ 800, 600 };
 std::tuple<int, int> Renderer::dimensions_ = default_dimensions;
 plane_params Renderer::complex_plane_params_ = plane_params{ -2, 1, -1.2, 1.2 };
 plane_params Renderer::real_plane_params_ = plane_params{0.0, 0, 0, 0};
+std::stack<plane_params> Renderer::complex_params_stack_{};
 bool Renderer::color_view_ = true;
+bool Renderer::use_cube_fn_ = false;
 
 void Renderer::render()
 {
@@ -66,7 +78,8 @@ void Renderer::render()
 	{
 		for(auto y = 0; y < std::get<1>(dimensions_); ++y)
 		{
-			const auto n = divergence_test_cube(screen_to_complex(x, y), 128);
+			const auto n = divergence_test(screen_to_complex(x, y), 128, use_cube_fn_);
+
 			if (color_view_) {
 				set_gl_color_frac(n);
 			} else if (n == -1)
@@ -98,6 +111,32 @@ void Renderer::set_gl_color_frac(const int n)
 	glColor3f(r / 255.0f, g / 255.0f, b / 255.0f);
 }
 
+void Renderer::increase_zoom(const int x, const int y)
+{
+	using namespace std;
+
+	complex_params_stack_.push(complex_plane_params_);
+
+	const auto level = 1.0 / 16;
+	const auto point_complex = screen_to_complex(x, y);
+	const auto new_width = (get<1>(complex_plane_params_) - get<0>(complex_plane_params_)) * level;
+	const auto new_height = (get<3>(complex_plane_params_) - get<2>(complex_plane_params_)) * level;
+
+	complex_plane_params_ = { point_complex.re - new_width / 2, point_complex.re + new_width / 2, 
+							point_complex.im - new_height / 2, point_complex.im + new_height / 2 };
+}
+
+void Renderer::decrease_zoom()
+{
+	if(complex_params_stack_.empty())
+	{
+		return;
+	}
+
+	complex_plane_params_ = complex_params_stack_.top();
+	complex_params_stack_.pop();
+}
+
 
 void Renderer::init(int & argc, char * argv[], const std::string & window_title) const
 {
@@ -109,6 +148,7 @@ void Renderer::init(int & argc, char * argv[], const std::string & window_title)
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardUpFunc(key_up);
+	glutMouseFunc(mouse_func);
 }
 
 complex Renderer::screen_to_complex(const int x, const int y)
@@ -158,6 +198,25 @@ void Renderer::key_up(const unsigned char key, int x, int y)
 	} else if (key == 'b')
 	{
 		color_view_ = true;
+	} else if (key == 'x')
+	{
+		decrease_zoom();
+	} else if (key == '1')
+	{
+		use_cube_fn_ = false;
+	} else if (key == '2')
+	{
+		use_cube_fn_ = true;
+	}
+
+	glutPostRedisplay();
+}
+
+void Renderer::mouse_func(const int button, const int state, const int x, const int y)
+{
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+	{
+		increase_zoom(x, y);
 	}
 
 	glutPostRedisplay();

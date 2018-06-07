@@ -3,6 +3,7 @@
 #include <tuple>
 #include <string>
 #include "Scene.h"
+#include <stack>
 
 typedef struct
 {
@@ -24,6 +25,9 @@ class Renderer
 	static plane_params real_plane_params_;
 
 	static bool color_view_;
+	static bool use_cube_fn_;
+
+	static std::stack<plane_params> complex_params_stack_;
 
 
 public:
@@ -34,7 +38,10 @@ public:
 	static void display();
 	static void reshape(int width, int height);
 	static void key_up(unsigned char key, int x, int y);
+	static void mouse_func(int button, int state, int x, int y);
 	static void render();
 	static void set_gl_color_frac(int n);
+	static void increase_zoom(int x, int y);
+	static void decrease_zoom();
 };
 
