@@ -144,12 +144,12 @@ void Renderer::key_up(const unsigned char key, int, int)
 	{
 	case 'r':
 		{
-		scene_.rotate_eye(1);
+		scene_.rotate_eye(5);
 		break;
 		}
 	case 'l':
 		{
-		scene_.rotate_eye(-1);
+		scene_.rotate_eye(-5);
 		break;
 		}
 	case 'k' :
