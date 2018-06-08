@@ -64,7 +64,8 @@ const std::vector<double>& IfsDescriptor::weights() const
 IfsDescriptor::IfsDescriptor(IfsDescriptor&& other) noexcept: points_number_(other.points_number_),
                                                               limit_(other.limit_),
                                                               etas_(std::move(other.etas_)),
-                                                              table_(std::move(other.table_))
+                                                              table_(std::move(other.table_)),
+														      weights_(std::move(other.weights_))
 {
 }
 
@@ -76,6 +77,7 @@ IfsDescriptor& IfsDescriptor::operator=(const IfsDescriptor& other)
 	limit_ = other.limit_;
 	etas_ = other.etas_;
 	table_ = other.table_;
+	weights_ = other.weights_;
 	return *this;
 }
 
@@ -87,5 +89,6 @@ IfsDescriptor& IfsDescriptor::operator=(IfsDescriptor&& other) noexcept
 	limit_ = other.limit_;
 	etas_ = std::move(other.etas_);
 	table_ = std::move(other.table_);
+	weights_ = std::move(other.weights_);
 	return *this;
 }

@@ -6,11 +6,11 @@
 #include "IFSDescriptor.h"
 #include <random>
 #include <map>
+#include "parser_helper.hpp"
 
 int main(int argc, char *argv[])
 {
-
-	std::ifstream ifs_file("ifs_def.txt");
+	std::ifstream ifs_file("ifs_triangle.txt");
 	const auto ifs = IfsDescriptor::from_stream(ifs_file);
 
 	const auto object_normalized = Mesh::from_stream(std::cin).normalize();

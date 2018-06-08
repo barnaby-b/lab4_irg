@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include <random>
+#include "parser_helper.hpp"
 
 const std::tuple<int, int> Renderer::default_dimensions = std::tuple<int, int>{ 800, 600 };
 std::tuple<int, int> Renderer::dimensions_ = default_dimensions;
@@ -18,21 +19,36 @@ void Renderer::render()
 	
 
 	auto weights = ifs_.weights();
-	const std::discrete_distribution<> d(weights.begin(), weights.end());
-	std::random_device rd;
-	std::mt19937 gen(rd());
+	if(weights.size() == 0)
+	{
+		return;
+	}
 
 	auto table = ifs_.table();
+	auto ifs_points = ifs_.points_number();
+	auto ifs_limit = ifs_.limit();
 
-	for(auto brojac = 0; brojac < ifs_.points_number(); ++brojac)
+	std::vector<int> weights_scaled;
+	for(auto w : weights)
+	{
+		weights_scaled.push_back(static_cast<int>(w * 100));
+	}
+
+	std::vector<int> possible_indices;
+	for(auto i = 0; i < weights.size(); i++)
+	{
+		possible_indices.push_back(i);
+	}
+
+	for(auto brojac = 0; brojac < ifs_points; ++brojac)
 	{
 		auto x0 = 0.0;
 		auto y0 = 0.0;
 
-		for(auto iter = 0; iter < ifs_.limit(); ++iter)
+		for(auto iter = 0; iter < ifs_limit; ++iter)
 		{
-			const auto chosen_transform = table[d(gen)];
-
+			const auto ind = my_rand(possible_indices, weights_scaled, weights_scaled.size());
+			const auto chosen_transform = table[ind];
 			x0 = chosen_transform[0] * x0 + chosen_transform[1] * y0 + chosen_transform[4];;
 			y0 = chosen_transform[2] * x0 + chosen_transform[3] * y0 + chosen_transform[5];;
 		}
@@ -41,7 +57,9 @@ void Renderer::render()
 		glBegin(GL_POINTS);
 		glVertex2i(round(x0 * std::get<0>(ifs_.etas()) + std::get<1>(ifs_.etas())), round(y0 *  std::get<2>(ifs_.etas()) + std::get<3>(ifs_.etas())));
 		glEnd();
-		if (!(brojac % 1000)) std::cout << brojac << std::endl;
+		if (brojac % 1000 == 0) {
+			std::cout << brojac << std::endl;
+		}
 	}
 }
 

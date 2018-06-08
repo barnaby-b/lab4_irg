@@ -1,4 +1,4 @@
-10000 # pointsNumber
+40000# pointsNumber
 25 # limit
 80 300 # eta1 eta2
 60 0 # eta3 eta4
