@@ -6,6 +6,7 @@
 #include "Light.h"
 #include "Material.h"
 
+#include <glm/glm.hpp>
 class Renderer
 {
 	static const std::tuple<int, int> default_dimensions;

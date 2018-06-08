@@ -135,6 +135,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.hpp" />
+    <ClInclude Include="proj_util.hpp" />
     <ClInclude Include="Renderer.hpp" />
     <ClInclude Include="Scene.h" />
   </ItemGroup>

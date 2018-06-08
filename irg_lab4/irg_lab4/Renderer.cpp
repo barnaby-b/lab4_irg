@@ -1,8 +1,7 @@
 #include "Renderer.hpp"
 #include <string>
 #include <GL/glut.h>
-#include <glm/gtc/matrix_transform.hpp>
-
+#include "proj_util.hpp"
 
 const std::tuple<int, int> Renderer::default_dimensions = std::tuple<int, int>{ 800, 600 };
 Scene Renderer::scene_{};
@@ -10,6 +9,7 @@ Light Renderer::light_{ { -4, 5, 3 }, { 0.2f, 0.2f, 0.2f },{ 0.8f, 0.0f, 0 },{ 0
 Material Renderer::material_{ {1.0f,1.0f,1},{1, 1.0f, 1},{0.01f, 0.01f, 0.01f} };
 glm::mat4 Renderer::frustum_{};
 glm::mat4 Renderer::look_at_{};
+
 
 std::array<float, 3> Renderer::get_light_intensity(const glm::vec3 point, const glm::vec3 normal)
 {
@@ -45,11 +45,6 @@ void set_gl_vertex(glm::vec3 vtx)
 	glVertex3f(vtx[0], vtx[1], vtx[2]);
 }
 
-glm::vec4 vec3_to_vec4(glm::vec3 v3)
-{
-	return { v3[0], v3[1], v3[2], 1 };
-}
-
 void Renderer::render()
 {
 
@@ -58,18 +53,19 @@ void Renderer::render()
 	auto i = 0u;
 	for(auto face : scene_.object().faces())
 	{
-		
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glBegin(GL_POLYGON);
 		auto vtx_coords = scene_.object().get_vertices_for_face(face);
 		const auto center = (vtx_coords[0] + vtx_coords[1] + vtx_coords[2]) * 1.0f/3.0f;
 		const auto normal = normalize(glm::vec3{ scene_.object().planes()[i][0],scene_.object().planes()[i][1], scene_.object().planes()[i][2] });
 
+		glColor3f(1, 0, 0);
 		set_gl_color(get_light_intensity(center, normal));
 
-		set_gl_vertex(frustum_ * look_at_ * vec3_to_vec4(vtx_coords[0]));
-		set_gl_vertex(frustum_ * look_at_ * vec3_to_vec4(vtx_coords[1]));
-		set_gl_vertex(frustum_ * look_at_ * vec3_to_vec4(vtx_coords[2]));
+		set_gl_vertex(transform_vtx(vtx_coords[0], look_at_, frustum_));
+		set_gl_vertex(transform_vtx(vtx_coords[1], look_at_, frustum_));
+		set_gl_vertex(transform_vtx(vtx_coords[2], look_at_, frustum_));
+		
 		glEnd();
 
 		++i;
@@ -86,9 +82,10 @@ void Renderer::init(int & argc, char * argv[], const std::string & window_title)
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardUpFunc(key_up);
-	glEnable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-	glCullFace(GL_BACK);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+//	glCullFace(GL_BACK);
 }
 
 
@@ -98,7 +95,7 @@ void Renderer::display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	look_at_ = lookAt(scene_.eye(), scene_.center(), scene_.up());
+	look_at_ = look_at_manual(scene_.eye(), scene_.center(), scene_.up());
 	
 	//gluLookAt(scene_.eye()[0], scene_.eye()[1], scene_.eye()[2],
 	//	scene_.center()[0], scene_.center()[1], scene_.center()[2],
@@ -116,16 +113,9 @@ void Renderer::reshape(const int width, const int height)
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
-	frustum_ = glm::frustum(-scene_.near_w() / 2, scene_.near_w() / 2,
-		-scene_.near_h() / 2, scene_.near_h() / 2,
-		scene_.z_near(), scene_.z_far());
-	
-	
-
+	frustum_ = frustum_manual(-0.5, 0.5, -0.5, 0.5, 1, 100);
 	glMatrixMode(GL_MODELVIEW);
 	glViewport(0, 0, width, height);
-	
 }
 
 void Renderer::key_up(const unsigned char key, int, int)
