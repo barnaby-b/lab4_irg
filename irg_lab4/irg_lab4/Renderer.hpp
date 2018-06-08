@@ -15,6 +15,7 @@ class Renderer
 	static Material material_;
 	static glm::mat4 frustum_;
 	static glm::mat4 look_at_;
+	static bool use_smooth_shading_;
 
 public:
 	Renderer() = default;

@@ -28,6 +28,18 @@ inline glm::vec3 transform_vtx(const glm::vec3 vtx, const glm::mat4& look_at, co
 	return { transformed4[0] / transformed4[3], transformed4[1] / transformed4[3], transformed4[2]/transformed4[3]};
 }
 
+inline glm::vec3 transform_normal(const glm::vec3 normal, const glm::mat4& look_at, const glm::mat4& frustum)
+{
+	const auto normal_transform = glm::transpose(glm::inverse(look_at));
+
+	const auto normal4 = vec3_to_vec4(normal);
+	const auto transformed4 = normal4 * normal_transform;
+
+	return glm::normalize(glm::vec3{ transformed4[0] / transformed4[3],
+									 transformed4[1] / transformed4[3],
+									 transformed4[2] / transformed4[3] });
+}
+
 
 inline void print_vec3(glm::vec3 v)
 {

@@ -9,6 +9,7 @@ Light Renderer::light_{ { -4, 5, 3 }, { 0.2f, 0.2f, 0.2f },{ 0.8f, 0.0f, 0 },{ 0
 Material Renderer::material_{ {1.0f,1.0f,1},{1, 1.0f, 1},{0.01f, 0.01f, 0.01f} };
 glm::mat4 Renderer::frustum_{};
 glm::mat4 Renderer::look_at_{};
+bool Renderer::use_smooth_shading_ = false;
 
 
 std::array<float, 3> Renderer::get_light_intensity(const glm::vec3 point, const glm::vec3 normal)
@@ -56,16 +57,36 @@ void Renderer::render()
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glBegin(GL_POLYGON);
 		auto vtx_coords = scene_.object().get_vertices_for_face(face);
-		const auto center = (vtx_coords[0] + vtx_coords[1] + vtx_coords[2]) * 1.0f/3.0f;
+
+		const auto transformed1 = transform_vtx(vtx_coords[0], look_at_, frustum_);
+		const auto transformed2 = transform_vtx(vtx_coords[1], look_at_, frustum_);
+		const auto transformed3 = transform_vtx(vtx_coords[2], look_at_, frustum_);
+
+		const auto center = (transformed1 + transformed2 + transformed3) * 1.0f/3.0f;
 		const auto normal = normalize(glm::vec3{ scene_.object().planes()[i][0],scene_.object().planes()[i][1], scene_.object().planes()[i][2] });
 
-		glColor3f(1, 0, 0);
-		set_gl_color(get_light_intensity(center, normal));
+		const auto transformed_normal = transform_normal(normal, look_at_, frustum_);
 
-		set_gl_vertex(transform_vtx(vtx_coords[0], look_at_, frustum_));
-		set_gl_vertex(transform_vtx(vtx_coords[1], look_at_, frustum_));
-		set_gl_vertex(transform_vtx(vtx_coords[2], look_at_, frustum_));
-		
+		if (!use_smooth_shading_) {
+			set_gl_color(get_light_intensity(center, transformed_normal));
+			set_gl_vertex(transformed1);
+			set_gl_vertex(transformed2);
+			set_gl_vertex(transformed3);
+		} else
+		{
+			const auto vtx_norm_1 = transform_normal(scene_.object().vtx_normals()[scene_.object().faces()[i][0]], look_at_, frustum_);
+			const auto vtx_norm_2 = transform_normal(scene_.object().vtx_normals()[scene_.object().faces()[i][1]], look_at_, frustum_);;
+			const auto vtx_norm_3 = transform_normal(scene_.object().vtx_normals()[scene_.object().faces()[i][2]], look_at_, frustum_);;
+
+
+
+			set_gl_color(get_light_intensity(transformed1, vtx_norm_1));
+			set_gl_vertex(transformed1);
+			set_gl_color(get_light_intensity(transformed2, vtx_norm_2));
+			set_gl_vertex(transformed2);
+			set_gl_color(get_light_intensity(transformed3, vtx_norm_3));
+			set_gl_vertex(transformed3);
+		}
 		glEnd();
 
 		++i;
@@ -135,12 +156,14 @@ void Renderer::key_up(const unsigned char key, int, int)
 	case 'k' :
 		{
 		glShadeModel(GL_FLAT);
+		use_smooth_shading_ = false;
 		glutPostRedisplay();
 		break;
 		}
 	case 'g' :
 		{
 		glShadeModel(GL_SMOOTH);
+		use_smooth_shading_ = true;
 		glutPostRedisplay();
 		break;
 		}
