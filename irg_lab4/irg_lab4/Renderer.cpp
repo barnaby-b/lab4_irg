@@ -106,7 +106,6 @@ void Renderer::init(int & argc, char * argv[], const std::string & window_title)
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//	glCullFace(GL_BACK);
 }
 
 
@@ -145,12 +144,12 @@ void Renderer::key_up(const unsigned char key, int, int)
 	{
 	case 'r':
 		{
-		scene_.rotate_eye(10);
+		scene_.rotate_eye(1);
 		break;
 		}
 	case 'l':
 		{
-		scene_.rotate_eye(-10);
+		scene_.rotate_eye(-1);
 		break;
 		}
 	case 'k' :
