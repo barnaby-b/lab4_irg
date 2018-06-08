@@ -12,30 +12,30 @@ IfsDescriptor Renderer::ifs_{ 0, 0, {}, {{}} };
 
 void Renderer::render()
 {
-
-	const auto limit = 30;
 	glPointSize(1);
 	glColor3f(0.0f, 0.7f, 0.3f);
 	
 
 	auto weights = ifs_.weights();
-	if(weights.size() == 0)
+	if(weights.empty())
 	{
 		return;
 	}
 
 	auto table = ifs_.table();
-	auto ifs_points = ifs_.points_number();
-	auto ifs_limit = ifs_.limit();
+	const auto ifs_points = ifs_.points_number();
+	const auto ifs_limit = ifs_.limit();
 
 	std::vector<int> weights_scaled;
+	weights_scaled.reserve(weights.size());
 	for(auto w : weights)
 	{
 		weights_scaled.push_back(static_cast<int>(w * 100));
 	}
 
 	std::vector<int> possible_indices;
-	for(auto i = 0; i < weights.size(); i++)
+	possible_indices.reserve(weights.size());
+	for(auto i = 0u; i < weights.size(); i++)
 	{
 		possible_indices.push_back(i);
 	}
@@ -55,7 +55,8 @@ void Renderer::render()
 
 
 		glBegin(GL_POINTS);
-		glVertex2i(round(x0 * std::get<0>(ifs_.etas()) + std::get<1>(ifs_.etas())), round(y0 *  std::get<2>(ifs_.etas()) + std::get<3>(ifs_.etas())));
+		glVertex2i(static_cast<int>(round(x0 * std::get<0>(ifs_.etas()) + std::get<1>(ifs_.etas()))), 
+			       static_cast<int>(round(y0 *  std::get<2>(ifs_.etas()) + std::get<3>(ifs_.etas()))));
 		glEnd();
 		if (brojac % 1000 == 0) {
 			std::cout << brojac << std::endl;
@@ -63,7 +64,7 @@ void Renderer::render()
 	}
 }
 
-void Renderer::set_ifs(const IfsDescriptor ifs)
+void Renderer::set_ifs(const IfsDescriptor& ifs)
 {
 	ifs_ = ifs;
 

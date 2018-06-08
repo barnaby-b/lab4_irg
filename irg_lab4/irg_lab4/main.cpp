@@ -4,9 +4,6 @@
 #include <fstream>
 #include <GL/glut.h>
 #include "IFSDescriptor.h"
-#include <random>
-#include <map>
-#include "parser_helper.hpp"
 
 int main(int argc, char *argv[])
 {

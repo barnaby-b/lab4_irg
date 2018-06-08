@@ -25,6 +25,6 @@ public:
 	static void reshape(int width, int height);
 	static void render();
 
-	static void set_ifs(IfsDescriptor ifs);
+	static void set_ifs(const IfsDescriptor& ifs);
 };
 
